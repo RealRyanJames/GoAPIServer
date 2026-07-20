@@ -37,6 +37,13 @@ type DATA struct {
 	len       int
 }
 
+type MongoURL struct {
+	dbName       string
+	isLogginedIn bool
+	collName     string
+	data         []string
+}
+
 func (d *DATA) getData(data DATA, name string) string {
 
 	if data.isRunning {
@@ -79,5 +86,17 @@ func main() {
 		router.GET(string(userAppRoute.route), GetIndex)
 
 		log.Fatal(http.ListenAndServe(string(clients_info), router))
+	}
+
+	dataURIClient := MongoURL{
+		dbName:       "SimpleAPI",
+		isLogginedIn: false,
+		collName:     "API",
+		data:         []string{""},
+	}
+
+	if dataURIClient.isLogginedIn == false {
+		dataURIClient.isLogginedIn = true
+
 	}
 }
