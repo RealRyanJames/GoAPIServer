@@ -31,6 +31,24 @@ type Route struct {
 	textMessage string
 }
 
+type DATA struct {
+	dataName  string
+	isRunning bool
+	len       int
+}
+
+func (d *DATA) getData(data DATA, name string) string {
+
+	if data.isRunning {
+		data.len = 0
+		data.len += 1
+	}
+
+	data.dataName = string(name)
+
+	return string(data.dataName)
+}
+
 func GetIndex(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	fmt.Fprintf(w, string("I am Ryan And This is My Server"))
@@ -49,9 +67,17 @@ func main() {
 		textMessage: strings.ToUpper("I am Ryan And This is My Server"),
 	}
 
-	router := httprouter.New()
-	router.GET(string(userAppRoute.route), GetIndex)
+	data := DATA{}
+	data.getData(DATA{
+		dataName:  userAppRoute.route,
+		len:       0,
+		isRunning: true,
+	}, "App")
 
-	log.Fatal(http.ListenAndServe(string(clients_info), router))
+	if data.isRunning {
+		router := httprouter.New()
+		router.GET(string(userAppRoute.route), GetIndex)
 
+		log.Fatal(http.ListenAndServe(string(clients_info), router))
+	}
 }
